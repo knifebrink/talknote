@@ -1,8 +1,8 @@
 <template>
   <div class="app-wrapper" :class="classObj">
-    <sidebar class="sidebar-container"></sidebar>
+<!--    <sidebar class="sidebar-container"></sidebar>-->
     <div class="main-container">
-      <navbar></navbar>
+<!--      <navbar></navbar>-->
       <app-main></app-main>
     </div>
   </div>
@@ -15,23 +15,23 @@ import { Navbar, Sidebar, AppMain } from './components'
 export default {
   name: 'layout',
   components: {
-    Navbar,
-    Sidebar,
+    // Navbar,
+    // Sidebar,
     AppMain
   },
   // mixins: [ResizeMixin],
   computed: {
-    sidebar() {
-      return this.$store.state.app.sidebar
-    },
-    device() {
-      return this.$store.state.app.device
-    },
+    // sidebar() {
+    //   return null
+    // },
+    // device() {
+    //   return null
+    // },
     classObj() {
       return {
-        hideSidebar: !this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
+        hideSidebar: false,
+        withoutAnimation: false,
+        mobile: false
       }
     }
   }

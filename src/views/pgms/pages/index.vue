@@ -157,7 +157,7 @@
     },
     created() {
       this.getList();
-      this.getAllRoleList();
+      // this.getAllRoleList();
     },
     filters: {
       formatDateTime(time) {
@@ -285,6 +285,8 @@
         getTalkUserPage(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
+          console.log("啥啊: "+response.)
+          console.log(this.list)
         });
       },
       getAllRoleList() {
