@@ -12,12 +12,15 @@ import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 import VCharts from 'v-charts'
 
 import '@/styles/index.scss' // global css
-import '@/icons' // icon
+import '@/icons'
+
 
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
 
 Vue.config.productionTip = false
+
+console.log("-----不可能啊----")
 
 
 new Vue({
@@ -26,3 +29,4 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+console.log(router)
