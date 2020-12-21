@@ -1,21 +1,7 @@
 # talknote
-
-> A Vue.js project
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+一个talk项目开发，并顺带学习语法，webpacket，es2016+，npm，vue等
+问题：
+1. import 是否会直接执行js。
+2. 不同控件传参
+3. 配置
+4. hidden:ture 用处

@@ -5,11 +5,9 @@ import HelloWorld from '@/components/HelloWorld'
 Vue.use(Router)
 
 export default new Router({
+  // mode: 'history', //后端支持可开
+  scrollBehavior: () => ({y: 0}),
   routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    }
+    {path: '/404', component: () => import('@/views/404')},
   ]
 })
