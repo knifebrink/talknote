@@ -5,8 +5,6 @@ import HelloWorld from '@/components/HelloWorld'
 import Layout from '../views/layout/Layout'
 Vue.use(Router)
 
-console.log("-----不可能啊")
-console.log(Router)
 export default new Router({
   routes: [
     {path: '/404', component: () => import('@/views/404'),hidden:true},
@@ -23,13 +21,27 @@ export default new Router({
       name: 'pgms',
       children: [
         {
-        path: 'pages',
+        path: 'pages/:manager',
         name: 'pages',
         component: () => import('@/views/pgms/pages/index'),
         meta: {title: '商品列表', icon: 'product-list'},
           hidden:true
         }
 
+      ]},
+    {
+      path: '/cms',
+      component: Layout,
+      name: 'cms',
+      children: [
+        {
+          path: 'content/:pageName',
+          name: 'content',
+          component: () => import('@/views/cms/index'),
+          meta: {title: '订单列表', icon: 't-list'},
+          hidden:true
+        }
+
       ]}
-      ]
+  ]
 })

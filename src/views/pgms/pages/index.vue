@@ -9,7 +9,7 @@
       <el-table ref="adminTable"
                 :data="list"
                 style="width: 100%;"
-                v-loading="listLoading" border>
+                v-loading="listLoading"  border>
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
@@ -27,10 +27,10 @@
         <el-table-column label="是否启用" width="140" align="center">
           <template slot-scope="scope">
             <el-switch
-              @change="handleStatusChange(scope.$index, scope.row)"
-              :active-value="1"
-              :inactive-value="0"
-              v-model="scope.row.status">
+              :active-value="0"
+              :inactive-value="1"
+              v-model="scope.row.status"
+              disabled>
             </el-switch>
           </template>
         </el-table-column>
@@ -62,35 +62,17 @@
       </el-pagination>
     </div>
     <el-dialog
-      :title="isEdit?'编辑用户':'添加用户'"
+      :title="isEdit?'编辑页面':'添加页面'"
       :visible.sync="dialogVisible"
       width="40%">
       <el-form :model="admin"
                ref="adminForm"
                label-width="150px" size="small">
-        <el-form-item label="帐号：">
-          <el-input v-model="admin.username" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="姓名：">
-          <el-input v-model="admin.nickName" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱：">
-          <el-input v-model="admin.email" style="width: 250px"></el-input>
+        <el-form-item label="页面名称：">
+          <el-input v-model="admin.pageName" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="密码：">
           <el-input v-model="admin.password"  type="password" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="备注：">
-          <el-input v-model="admin.note"
-                    type="textarea"
-                    :rows="5"
-                    style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="是否启用：">
-          <el-radio-group v-model="admin.status">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -98,45 +80,22 @@
         <el-button type="primary" @click="handleDialogConfirm()" size="small">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      title="分配角色"
-      :visible.sync="allocDialogVisible"
-      width="30%">
-      <el-select v-model="allocRoleIds" multiple placeholder="请选择" size="small" style="width: 80%">
-        <el-option
-          v-for="item in allRoleList"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id">
-        </el-option>
-      </el-select>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="allocDialogVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="handleAllocDialogConfirm()" size="small">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
-  // import {fetchList,createAdmin,updateAdmin,updateStatus,deleteAdmin,getRoleByAdmin,allocRole} from '@/api/login';
-  // import {fetchAllRoleList} from '@/api/role';
   import {formatDate} from '@/utils/date';
-  import {getTalkUserPage} from "@/api/talk";
+  import {createTalkUserPage, getTalkUserPage} from "@/api/talk";
 
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
     keyword: null,
-    name:'brink'
+    name:''
   };
   const defaultAdmin = {
     id: null,
-    username: null,
-    password: null,
-    nickName: null,
-    email: null,
-    note: null,
-    status: 1
+    pageName: null,
+    password: null
   };
   export default {
     name: 'adminList',
@@ -156,6 +115,9 @@
       }
     },
     created() {
+      console.log(this.$route.params);
+      console.log(this.$route.params.manager);
+      this.listQuery.name = this.$route.params.manager;
       this.getList();
       // this.getAllRoleList();
     },
@@ -169,12 +131,11 @@
       }
     },
     methods: {
-      handleResetSearch() {
-        this.listQuery = Object.assign({}, defaultListQuery);
-      },
-      handleSearchList() {
-        this.listQuery.pageNum = 1;
-        this.getList();
+      notDevelopMessageTips(){
+        this.$message({
+          message: '没有开发呢，小兄弟',
+          type: 'error'
+        });
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
@@ -211,19 +172,21 @@
         });
       },
       handleDelete(index, row) {
-        this.$confirm('是否要删除该用户?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          deleteAdmin(row.id).then(response => {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-            this.getList();
-          });
-        });
+        // todo
+        this.notDevelopMessageTips();
+        // this.$confirm('是否要删除该用户?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        //   deleteAdmin(row.id).then(response => {
+        //     this.$message({
+        //       type: 'success',
+        //       message: '删除成功!'
+        //     });
+        //     this.getList();
+        //   });
+        // });
       },
       handleUpdate(index, row) {
         this.dialogVisible = true;
@@ -231,50 +194,38 @@
         this.admin = Object.assign({},row);
       },
       handleDialogConfirm() {
+        if (this.isEdit) {
+          this.notDevelopMessageTips();
+          return ;
+        }
         this.$confirm('是否要确认?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           if (this.isEdit) {
-            updateAdmin(this.admin.id,this.admin).then(response => {
-              this.$message({
-                message: '修改成功！',
-                type: 'success'
-              });
-              this.dialogVisible =false;
-              this.getList();
-            })
+            this.notDevelopMessageTips();
+            // todo
           } else {
-            createAdmin(this.admin).then(response => {
+            createTalkUserPage(Object.assign({},this.admin,{name:this.listQuery.name})).then(response => {
               this.$message({
                 message: '添加成功！',
                 type: 'success'
               });
               this.dialogVisible =false;
               this.getList();
+            }).catch(error => {
+              this.$message({
+                message: '添加失败！',
+                type: 'error'
+              });
+              this.dialogVisible =false;
+              this.getList();
             })
           }
         })
-      },
-      handleAllocDialogConfirm(){
-        this.$confirm('是否要确认?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let params = new URLSearchParams();
-          params.append("adminId", this.allocAdminId);
-          params.append("roleIds", this.allocRoleIds);
-          allocRole(params).then(response => {
-            this.$message({
-              message: '分配成功！',
-              type: 'success'
-            });
-            this.allocDialogVisible = false;
-          })
-        })
-      },
+      }
+      ,
       handleSelectRole(index,row){
         this.allocAdminId = row.id;
         this.allocDialogVisible = true;
@@ -284,8 +235,9 @@
         this.listLoading = true;
         getTalkUserPage(this.listQuery).then(response => {
           this.listLoading = false;
-          this.list = response.data.list;
-          console.log("啥啊: "+response.)
+          this.list = response.data;
+          console.log("这："+response.data)
+
           console.log(this.list)
         });
       },

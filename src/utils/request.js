@@ -13,6 +13,7 @@ service.interceptors.request.use(config => {
   // if (store.getters.token) {
   //   config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   // }
+  console.log("use: "+JSON.stringify(config))
   return config
 }, error => {
   // Do something with request error
@@ -27,6 +28,13 @@ service.interceptors.response.use(
   * code为非200是抛错 可结合自己业务进行修改
   */
     const res = response.data
+    if("undefined"== typeof response.data)
+    {
+      response = JSON.stringify(response)
+      console.log("response.use: "+"转换")
+    }else
+      console.log("response.use: "+typeof response.data)
+    console.log("response.use: "+response)
     if (res.code !== 200) {
       Message({
         message: res.message,
@@ -46,8 +54,10 @@ service.interceptors.response.use(
       //     })
       //   })
       // }
+      console.log("response.use: "+"error")
       return Promise.reject('error')
     } else {
+
       return response.data
     }
   },
