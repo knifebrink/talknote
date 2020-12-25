@@ -18,7 +18,7 @@
           <template slot-scope="scope">{{scope.row.content}}</template>
         </el-table-column>
         <el-table-column label="类型" width="120" align="center">
-          <template slot-scope="scope">￥{{scope.row.type}}</template>
+          <template slot-scope="scope">{{scope.row.type}}</template>
         </el-table-column>
         <el-table-column label="创建时间" width="180" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatCreateTime}}</template>
@@ -62,7 +62,7 @@
         layout="total, sizes,prev, pager, next,jumper"
         :current-page.sync="listQuery.pageNum"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10,20,30]"
         :total="total">
       </el-pagination>
     </div>
@@ -86,7 +86,7 @@
 </template>
 <script>
   import {formatDate} from '@/utils/date';
-  import {getTalkContentByPageName} from "@/api/talk";
+  import {deleteTalkContent, getTalkContentByPageName} from "@/api/talk";
   // 请求参数
   const defaultListQuery = {
     pageNum: 1,
@@ -95,34 +95,32 @@
   };
   export default {
     name: "talkContentList",
-
     data() {
       return {
+        pageName:"",
         listQuery: Object.assign({}, defaultListQuery),
         listLoading: true,
         list: null, // 对象属性由接口提供
         total: null,
-        operateType: null,
+        operateType: 1,
         multipleSelection: [],
         closeOrder:{
           dialogVisible:false,
           content:null,
           orderIds:[]
         },
-
-
-
         operateOptions: [
           {
             label: "删除订单",
-            value: 3
+            value: 1
           }
         ],
         logisticsDialogVisible:false
       }
     },
     created() {
-      this.listQuery.pageName = this.$route.params.pageName;
+      this.pageName = this.$route.params.pageName;
+      this.listQuery.pageName = this.pageName;
       this.getList();
     },
     filters: {
@@ -141,6 +139,7 @@
       },
       handleSelectionChange(val){
         this.multipleSelection = val;
+        console.log(JSON.stringify(val))
       },
       handleViewOrder(index, row){
         this.$router.push({path:'/oms/orderDetail',query:{id:row.id}})
@@ -158,8 +157,10 @@
       },
       handleDeleteOrder(index, row){
         let ids=[];
-        ids.push(row.id);
-        this.deleteOrder(ids);
+        ids.push({
+          content:row.content
+        });
+        this.deleteContent(ids);
       },
       handleBatchOperate(){
         if(this.multipleSelection==null||this.multipleSelection.length<1){
@@ -170,37 +171,13 @@
           });
           return;
         }
-        if(this.operateType===1){
-          //批量发货
-          let list=[];
-          for(let i=0;i<this.multipleSelection.length;i++){
-            if(this.multipleSelection[i].status===1){
-              list.push(this.covertOrder(this.multipleSelection[i]));
-            }
-          }
-          if(list.length===0){
-            this.$message({
-              message: '选中订单中没有可以发货的订单',
-              type: 'warning',
-              duration: 1000
-            });
-            return;
-          }
-          this.$router.push({path:'/oms/deliverOrderList',query:{list:list}})
-        }else if(this.operateType===2){
-          //关闭订单
-          this.closeOrder.orderIds=[];
-          for(let i=0;i<this.multipleSelection.length;i++){
-            this.closeOrder.orderIds.push(this.multipleSelection[i].id);
-          }
-          this.closeOrder.dialogVisible=true;
-        }else if(this.operateType===3){
+      if(this.operateType===1){
           //删除订单
           let ids=[];
           for(let i=0;i<this.multipleSelection.length;i++){
-            ids.push(this.multipleSelection[i].id);
+            ids.push({content:this.multipleSelection[i].content});
           }
-          this.deleteOrder(ids);
+          this.deleteContent(ids);
         }
       },
       handleSizeChange(val){
@@ -239,18 +216,18 @@
         this.listLoading = true;
         getTalkContentByPageName(this.listQuery).then(response => {
           this.listLoading = false;
-          this.list = response.data;
+          this.list = response.data.list;
+          this.total = response.data.total;
         });
       },
-      deleteOrder(ids){
+      deleteContent(ids){
         this.$confirm('是否要进行该删除操作?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let params = new URLSearchParams();
-          params.append("ids",ids);
-          deleteOrder(params).then(response=>{
+          console.log(JSON.stringify(ids))
+          deleteTalkContent({pageName:this.pageName},JSON.stringify(ids)).then(response=>{
             this.$message({
               message: '删除成功！',
               type: 'success',

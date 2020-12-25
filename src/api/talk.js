@@ -22,7 +22,20 @@ export function createTalkUserPage(params) {
 export function getTalkContentByPageName(params) {
   return request({
     url:'/talk/getTalkContentByPageName',
-    method:'post',
+    method:'get',
     params:params
   })
 }
+
+/**
+ * 删除页面内容，data:list
+ */
+export function deleteTalkContent(params,data) {
+  return request({
+    url:'/talk/deleteTalkContent',
+    method:'post',
+    params:params,
+    data:data
+  })
+}
+

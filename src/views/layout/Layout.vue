@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper" :class="classObj">
-<!--    <sidebar class="sidebar-container"></sidebar>-->
+    <sidebar class="sidebar-container"></sidebar>
     <div class="main-container">
 <!--      <navbar></navbar>-->
       <app-main></app-main>
@@ -16,17 +16,17 @@ export default {
   name: 'layout',
   components: {
     // Navbar,
-    // Sidebar,
+    Sidebar,
     AppMain
   },
   // mixins: [ResizeMixin],
   computed: {
-    // sidebar() {
-    //   return null
-    // },
-    // device() {
-    //   return null
-    // },
+    sidebar() {
+      return null
+    },
+    device() {
+      return null
+    },
     classObj() {
       return {
         hideSidebar: false,

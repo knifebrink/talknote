@@ -13,7 +13,7 @@ import VCharts from 'v-charts'
 
 import '@/styles/index.scss' // global css
 import '@/icons'
-
+import store from './store'
 
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
@@ -26,6 +26,7 @@ console.log("-----不可能啊----")
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
