@@ -14,6 +14,7 @@ import VCharts from 'v-charts'
 import '@/styles/index.scss' // global css
 import '@/icons'
 import store from './store'
+import '@/permission' // permission control
 
 Vue.use(ElementUI, { locale })
 Vue.use(VCharts)
@@ -30,4 +31,3 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
-console.log(router)

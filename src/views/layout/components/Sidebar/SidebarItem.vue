@@ -1,8 +1,8 @@
 <template>
   <div class="menu-wrapper">
-    <template v-for="item in routes" v-if="!item.hidden&&item.children">
+    <template v-for="item in routes" v-if="!item.hidden">
 
-      <router-link v-if="hasOneShowingChildren(item.children) && !item.children[0].children&&!item.alwaysShow" :to="item.path+'/'+item.children[0].path"
+      <router-link v-if="testLog(item)&&item.children && hasOneShowingChildren(item.children) && !item.children[0].children&&!item.alwaysShow" :to="item.path+'/'+item.children[0].path"
         :key="item.children[0].name">
         <el-menu-item :index="item.path+'/'+item.children[0].path" :class="{'submenu-title-noDropdown':!isNest}">
           <svg-icon v-if="item.children[0].meta&&item.children[0].meta.icon" :icon-class="item.children[0].meta.icon"></svg-icon>
@@ -33,6 +33,10 @@
 </template>
 
 <script>
+/**
+ * 读这段代码费了我好长的时间
+ * 主要是vue，codepen，element-ui，都不熟悉，还有递归和循环跑来跑去的
+ */
 export default {
   name: 'SidebarItem',
   props: {
@@ -53,7 +57,18 @@ export default {
         return true
       }
       return false
+    },
+    testLog(item){
+      if(item.children)
+        console.log("children:true")
+      console.log("testLog: ",item);
+      console.log(item.children && this.hasOneShowingChildren(item.children) && !item.children[0].children&&!item.alwaysShow)
+      return true
     }
+  },
+  created() {
+
   }
 }
+
 </script>

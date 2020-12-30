@@ -115,7 +115,6 @@
       }
     },
     created() {
-      console.log(this.$route.params);
       console.log(this.$route.params.manager);
       this.listQuery.name = this.$route.params.manager;
       this.getList();
@@ -236,9 +235,7 @@
         getTalkUserPage(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data;
-          console.log("这："+response.data)
 
-          console.log(this.list)
         });
       },
       getAllRoleList() {
