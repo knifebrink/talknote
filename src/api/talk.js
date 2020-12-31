@@ -1,5 +1,9 @@
 import request from '@/utils/request'
 
+/**
+ *
+ * @param params name:"name"
+ */
 export function getTalkUserPage(params) {
   return request({
     url:'/talk/getTalkUserPage',

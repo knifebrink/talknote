@@ -16,27 +16,30 @@ import HelloWorld from '@/components/HelloWorld'
 import Layout from '../views/layout/Layout'
 Vue.use(Router)
 export const constantRouterMap = [
-  {path: '/404', component: () => import('@/views/404'),hidden:false, meta: {title: '商品列表', icon: 'product-list'}},
+  {path: '/404', component: () => import('@/views/404')},
+  {path: '/login', component: () => import('@/views/login/index')},
   {
-    path: '/',
+    path: '',
     name: 'HelloWorld',
-    component: HelloWorld,
-    hidden:false,
-    meta: {title: '商品列表', icon: 'product-list'},
-
+    component: Layout,
+    redirect: '/home',
+    children: [{
+      path: 'home',
+      name: 'home',
+      component: HelloWorld,
+      meta: {title: '首页', icon: 'home'}
+    }]
   },
   {
     path: '/pgms',
     component: Layout,
     name: 'pgms',
-    meta: {title: '商品列表', icon: 'product-list'},
     children: [
       {
         path: 'pages/:manager',
         name: 'pages',
         component: () => import('@/views/pgms/pages/index'),
-        meta: {title: '商品列表2', icon: 'product-list'},
-        hidden:false
+        meta: {title: '页面管理', icon: ''}
       }
 
     ]},

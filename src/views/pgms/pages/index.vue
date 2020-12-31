@@ -30,7 +30,8 @@
               :active-value="0"
               :inactive-value="1"
               v-model="scope.row.status"
-              disabled>
+              disabled
+            >
             </el-switch>
           </template>
         </el-table-column>
@@ -38,8 +39,8 @@
           <template slot-scope="scope">
             <el-button size="mini"
                        type="text"
-                       @click="handleUpdate(scope.$index, scope.row)">
-              编辑
+                       @click="handleSelect(scope.$index, scope.row)">
+              查看
             </el-button>
             <el-button size="mini"
                        type="text"
@@ -85,6 +86,7 @@
 <script>
   import {formatDate} from '@/utils/date';
   import {createTalkUserPage, getTalkUserPage} from "@/api/talk";
+  import {setUserName} from "@/utils/auth";
 
   const defaultListQuery = {
     pageNum: 1,
@@ -191,6 +193,9 @@
         this.dialogVisible = true;
         this.isEdit = true;
         this.admin = Object.assign({},row);
+      },
+      handleSelect(index, row) {
+        this.$router.push({path: '/cms/content/'+row.name})
       },
       handleDialogConfirm() {
         if (this.isEdit) {

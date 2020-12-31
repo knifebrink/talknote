@@ -35,7 +35,7 @@ const constantSidebarButMap = [
     children: [
       {
 
-        path: '/',
+        path: '',
         name: '首页',
         hidden:false,
         meta: {title: '首页', icon: 'home'},
