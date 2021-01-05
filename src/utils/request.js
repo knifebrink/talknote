@@ -1,8 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import { getToken } from '@/utils/auth'
-// axios.defaults.headers.post['content-type'] = 'application/json'
-
+import store from '../store'
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
@@ -14,9 +13,9 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-  // if (store.getters.token) {
-  //   config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-  // }
+  if (store.getters.token) {
+    config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+  }
 
 
   return config

@@ -27,9 +27,9 @@
         <el-table-column label="是否启用" width="140" align="center">
           <template slot-scope="scope">
             <el-switch
-              :active-value="0"
-              :inactive-value="1"
-              v-model="scope.row.status"
+              :active-value="1"
+              :inactive-value="0"
+              v-model="allShow"
               disabled
             >
             </el-switch>
@@ -85,8 +85,8 @@
 </template>
 <script>
   import {formatDate} from '@/utils/date';
-  import {createTalkUserPage, getTalkUserPage} from "@/api/talk";
-  import {setUserName} from "@/utils/auth";
+  import {createTalkUserPage, deletePage, getTalkUserPage} from "@/api/talk";
+  import {getUserName, setUserName} from "@/utils/auth";
 
   const defaultListQuery = {
     pageNum: 1,
@@ -113,7 +113,8 @@
         allocDialogVisible: false,
         allocRoleIds:[],
         allRoleList:[],
-        allocAdminId:null
+        allocAdminId:null,
+        allShow:1
       }
     },
     created() {
@@ -174,20 +175,20 @@
       },
       handleDelete(index, row) {
         // todo
-        this.notDevelopMessageTips();
-        // this.$confirm('是否要删除该用户?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
-        //   deleteAdmin(row.id).then(response => {
-        //     this.$message({
-        //       type: 'success',
-        //       message: '删除成功!'
-        //     });
-        //     this.getList();
-        //   });
-        // });
+        // this.notDevelopMessageTips();
+        this.$confirm('是否要删除该页面?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deletePage({name:getUserName()},{id:row.id,name:row.name}).then(response => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.getList();
+          });
+        });
       },
       handleUpdate(index, row) {
         this.dialogVisible = true;

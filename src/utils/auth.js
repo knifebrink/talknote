@@ -23,7 +23,7 @@ export function setUserName(name) {
   return Cookies.set(UserNameKey, name)
 }
 
-export function removeUserName() {
+export function removeUserNameToken() {
   return Cookies.remove(UserNameKey)
 }
 

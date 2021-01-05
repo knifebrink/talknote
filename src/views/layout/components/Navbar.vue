@@ -25,8 +25,14 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import avatar from '@/assets/default_head.png'
 
 export default {
+  data(){
+    return {
+      avatar
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger
@@ -34,7 +40,6 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
     ])
   },
   methods: {
@@ -44,6 +49,7 @@ export default {
     logout() {
       this.$store.dispatch('LogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
+        console.log("退出成功")
       })
     }
   }

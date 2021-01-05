@@ -1,6 +1,6 @@
 ﻿import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Home from '@/components/Home'
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -20,13 +20,13 @@ export const constantRouterMap = [
   {path: '/login', component: () => import('@/views/login/index')},
   {
     path: '',
-    name: 'HelloWorld',
+    name: 'Home',
     component: Layout,
     redirect: '/home',
     children: [{
       path: 'home',
       name: 'home',
-      component: HelloWorld,
+      component: Home,
       meta: {title: '首页', icon: 'home'}
     }]
   },
@@ -47,13 +47,13 @@ export const constantRouterMap = [
     path: '/cms',
     component: Layout,
     name: 'cms',
-    meta: {title: '订单列表', icon: 't-list'},
+    meta: {title: '内容', icon: 't-list'},
     children: [
       {
         path: 'content/:pageName',
         name: 'content',
         component: () => import('@/views/cms/index'),
-        meta: {title: '订单列表2', icon: 't-list'},
+        meta: {title: '内容列表', icon: 't-list'},
         hidden:false
       }
 

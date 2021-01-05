@@ -3,6 +3,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
+      <el-button size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="orderTable"
@@ -82,16 +83,50 @@
         <el-button type="primary" @click="handleCloseOrderConfirm">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :title="isEdit?'编辑语句':'添加语句'"
+      :visible.sync="dialogVisible"
+      width="40%">
+      <el-form :model="talk"
+               ref="adminForm"
+               label-width="150px" size="small">
+        <el-form-item label="话语内容：">
+          <el-input v-model="talk.content" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="话语类型：">
+          <el-input v-model="talk.type"  style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="备注：">
+          <el-input v-model="talk.bg"  style="width: 250px"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="handleDialogConfirm()" size="small">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
   import {formatDate} from '@/utils/date';
-  import {deleteTalkContent, getTalkContentByPageName} from "@/api/talk";
+  import {
+    createTalkUserPage,
+    deleteTalkContent,
+    getTalkContentByPageName,
+    insertTalkContentByPageName
+  } from "@/api/talk";
   // 请求参数
   const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
     pageName:""
+  };
+  const defaultTalk = {
+    id: null,
+    content: null,
+    type: null,
+    bg:null,
+    pageName:null
   };
   export default {
     name: "talkContentList",
@@ -111,16 +146,20 @@
         },
         operateOptions: [
           {
-            label: "删除订单",
+            label: "批量删除",
             value: 1
           }
         ],
-        logisticsDialogVisible:false
+        logisticsDialogVisible:false,
+        dialogVisible: false,
+        talk: Object.assign({}, defaultTalk),
+        isEdit: false
       }
     },
     created() {
       this.pageName = this.$route.params.pageName;
       this.listQuery.pageName = this.pageName;
+      this.talk.pageName = this.pageName;
       this.getList();
     },
     filters: {
@@ -236,6 +275,50 @@
             this.getList();
           });
         })
+      },
+      handleAdd() {
+        this.dialogVisible = true;
+        this.isEdit = false;
+        this.talk = Object.assign({},defaultTalk);
+      },
+      handleDialogConfirm() {
+        if (this.isEdit) {
+          this.notDevelopMessageTips();
+          return ;
+        }
+        this.$confirm('是否要确认?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          if (this.isEdit) {
+            this.notDevelopMessageTips();
+            // todo
+          } else {
+            insertTalkContentByPageName(Object.assign({},this.talk)).then(response => {
+              this.$message({
+                message: '添加成功！',
+                type: 'success'
+              });
+              this.dialogVisible =false;
+              this.getList();
+            }).catch(error => {
+              this.$message({
+                message: '添加失败！',
+                type: 'error'
+              });
+              this.dialogVisible =false;
+              this.getList();
+            })
+          }
+        })
+      }
+      ,
+      notDevelopMessageTips(){
+        this.$message({
+          message: '没有开发呢，小兄弟',
+          type: 'error'
+        });
       },
       covertOrder(order){
         let address=order.receiverProvince+order.receiverCity+order.receiverRegion+order.receiverDetailAddress;

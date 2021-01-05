@@ -1,6 +1,6 @@
 ﻿
 import {getToken, setToken, removeToken, setUserName} from '@/utils/auth'
-import {getTalkUserPage} from "@/api/talk";
+import {getTalkUserPage, login} from "@/api/talk";
 
 /**
  * 这按实时所所所啊啊啊啊按实时所所所所所所所所所所所
@@ -32,22 +32,15 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
+      const password = userInfo.password.trim();
       return new Promise((resolve, reject) => {
-        getTalkUserPage({name:username}).then(response => {
+        login({name:username,password:password}).then(response => {
           const data = response.data
-          if(data&&data.length>0){
-            setUserName(username)
-            const tokenStr = username+Math.random()
-            commit('SET_TOKEN', tokenStr)
-            setToken(tokenStr)
-            resolve()
-          }else{
-            console.log("aaaError")
-            reject();
-          }
-
-
-
+          const tokenStr = data.tokenHead+data.token
+          setToken(tokenStr)
+          setUserName(username);
+          commit('SET_TOKEN', tokenStr)
+          resolve()
         }).catch(error => {
           console.log(error)
           reject()
@@ -65,7 +58,12 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-      })
+          commit('SET_TOKEN', '')
+          removeToken()
+          resolve()
+          console.log("退出")
+        }
+      )
     },
 
     // 前端 登出
