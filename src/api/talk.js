@@ -12,11 +12,12 @@ export function getTalkUserPage(params) {
   })
 }
 
-export function createTalkUserPage(params) {
+export function createTalkUserPage(params,data) {
   return request({
     url:'/talk/createTalkPage',
     method:'post',
-    params:params
+    params:params,
+    data:data
   })
 }
 
@@ -85,3 +86,31 @@ export function deletePage(params,data) {
   })
 }
 
+
+/**
+ * 创建用户
+ * @param params,name,password
+ *
+ */
+export function createUser(params) {
+  return request({
+    url:'/talk/create',
+    method:'post',
+    params:params
+  })
+}
+
+/**
+ * 编辑页面
+ * @param params,name
+ * @param data:(id,name,password)
+ * @returns
+ */
+export function updatePage(params,data) {
+  return request({
+    url:'/talk/updateTalkPage',
+    method:'post',
+    params:params,
+    data:data
+  })
+}

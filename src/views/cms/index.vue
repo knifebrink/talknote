@@ -280,38 +280,34 @@
         this.dialogVisible = true;
         this.isEdit = false;
         this.talk = Object.assign({},defaultTalk);
+        this.talk.pageName = this.pageName;
       },
       handleDialogConfirm() {
         if (this.isEdit) {
           this.notDevelopMessageTips();
-          return ;
+          return;
         }
-        this.$confirm('是否要确认?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          if (this.isEdit) {
-            this.notDevelopMessageTips();
-            // todo
-          } else {
-            insertTalkContentByPageName(Object.assign({},this.talk)).then(response => {
-              this.$message({
-                message: '添加成功！',
-                type: 'success'
-              });
-              this.dialogVisible =false;
-              this.getList();
-            }).catch(error => {
-              this.$message({
-                message: '添加失败！',
-                type: 'error'
-              });
-              this.dialogVisible =false;
-              this.getList();
-            })
-          }
-        })
+        if (this.isEdit) {
+          this.notDevelopMessageTips();
+          // todo
+        } else {
+          insertTalkContentByPageName(Object.assign({},this.talk)).then(response => {
+            this.$message({
+              message: '添加成功！',
+              type: 'success'
+            });
+            this.dialogVisible =false;
+            this.getList();
+          }).catch(error => {
+            this.$message({
+              message: '添加失败！',
+              type: 'error'
+            });
+            this.dialogVisible =false;
+            this.getList();
+          })
+        }
+
       }
       ,
       notDevelopMessageTips(){

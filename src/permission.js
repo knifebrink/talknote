@@ -7,6 +7,10 @@ import {getToken, getUserName} from '@/utils/auth' // 验权
 
 const whiteList = ['/login','/404'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
+  if(to.name==="page"){
+    next()
+    return ;
+  }
   NProgress.start()
   if (getToken()) {
     if (to.path === '/login') {

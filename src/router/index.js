@@ -18,6 +18,7 @@ Vue.use(Router)
 export const constantRouterMap = [
   {path: '/404', component: () => import('@/views/404')},
   {path: '/login', component: () => import('@/views/login/index')},
+
   {
     path: '',
     name: 'Home',
@@ -28,7 +29,8 @@ export const constantRouterMap = [
       name: 'home',
       component: Home,
       meta: {title: '首页', icon: 'home'}
-    }]
+    }
+    ]
   },
   {
     path: '/pgms',
@@ -58,8 +60,14 @@ export const constantRouterMap = [
       }
 
     ]},
+  {
+    path:'/:pageName',
+    component: () => import('@/components/Page'),
+    name:'page'
+  },
   {path: '*', redirect: '/404', hidden: true}
 ]
 export default new Router({
+  mode: 'history',
   routes: constantRouterMap
 })

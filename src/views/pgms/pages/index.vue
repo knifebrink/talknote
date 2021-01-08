@@ -16,10 +16,12 @@
         <el-table-column label="页面名称" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
+        <el-table-column label="展示名称" align="center">
+          <template slot-scope="scope">{{scope.row.showName}}</template>
+        </el-table-column>
         <el-table-column label="密码" align="center">
           <template slot-scope="scope">{{scope.row.password}}</template>
         </el-table-column>
-
         <el-table-column label="创建时间" width="160" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatDateTime}}</template>
         </el-table-column>
@@ -41,6 +43,11 @@
                        type="text"
                        @click="handleSelect(scope.$index, scope.row)">
               查看
+            </el-button>
+            <el-button size="mini"
+                       type="text"
+                       @click="handleUpdate(scope.$index, scope.row)">
+              编辑
             </el-button>
             <el-button size="mini"
                        type="text"
@@ -66,14 +73,17 @@
       :title="isEdit?'编辑页面':'添加页面'"
       :visible.sync="dialogVisible"
       width="40%">
-      <el-form :model="admin"
+      <el-form :model="page"
                ref="adminForm"
                label-width="150px" size="small">
         <el-form-item label="页面名称：">
-          <el-input v-model="admin.pageName" style="width: 250px"></el-input>
+          <el-input v-model="page.name" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="密码：">
-          <el-input v-model="admin.password"  type="password" style="width: 250px"></el-input>
+          <el-input v-model="page.password"  type="password" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="展示名称：">
+          <el-input v-model="page.showName" style="width: 250px"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -85,7 +95,7 @@
 </template>
 <script>
   import {formatDate} from '@/utils/date';
-  import {createTalkUserPage, deletePage, getTalkUserPage} from "@/api/talk";
+  import {createTalkUserPage, deletePage, getTalkUserPage, updatePage} from "@/api/talk";
   import {getUserName, setUserName} from "@/utils/auth";
 
   const defaultListQuery = {
@@ -94,10 +104,12 @@
     keyword: null,
     name:''
   };
-  const defaultAdmin = {
+  // 默认的页面，以及结构
+  const defaultPage = {
     id: null,
-    pageName: null,
-    password: null
+    name: null,
+    password: null,
+    showName: "一句话"
   };
   export default {
     name: 'adminList',
@@ -108,7 +120,7 @@
         total: null,
         listLoading: false,
         dialogVisible: false,
-        admin: Object.assign({}, defaultAdmin),
+        page: Object.assign({}, defaultPage),
         isEdit: false,
         allocDialogVisible: false,
         allocRoleIds:[],
@@ -151,7 +163,7 @@
       handleAdd() {
         this.dialogVisible = true;
         this.isEdit = false;
-        this.admin = Object.assign({},defaultAdmin);
+        this.page = Object.assign({},defaultPage);
       },
       handleStatusChange(index, row) {
         this.$confirm('是否要修改该状态?', '提示', {
@@ -193,15 +205,29 @@
       handleUpdate(index, row) {
         this.dialogVisible = true;
         this.isEdit = true;
-        this.admin = Object.assign({},row);
+        this.page = Object.assign({},row);
       },
       handleSelect(index, row) {
         this.$router.push({path: '/cms/content/'+row.name})
       },
       handleDialogConfirm() {
         if (this.isEdit) {
-          this.notDevelopMessageTips();
-          return ;
+          updatePage({name:this.listQuery.name},this.page).then(response => {
+            this.$message({
+              message: '编辑成功！',
+              type: 'success'
+            });
+            this.dialogVisible =false;
+            this.getList();
+          }).catch(error => {
+            this.$message({
+              message: '编辑失败！',
+              type: 'error'
+            });
+            this.dialogVisible =false;
+            this.getList();
+          })
+          return ;// 退出
         }
         this.$confirm('是否要确认?', '提示', {
           confirmButtonText: '确定',
@@ -212,7 +238,7 @@
             this.notDevelopMessageTips();
             // todo
           } else {
-            createTalkUserPage(Object.assign({},this.admin,{name:this.listQuery.name})).then(response => {
+            createTalkUserPage({name:this.listQuery.name},this.page).then(response => {
               this.$message({
                 message: '添加成功！',
                 type: 'success'

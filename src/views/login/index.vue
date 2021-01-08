@@ -36,12 +36,17 @@
           </span>
           </el-input>
         </el-form-item>
-        <el-form-item style="margin-bottom: 60px;text-align: center">
+        <el-form-item style="margin-bottom: 30px;text-align: center">
           <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
             登录
           </el-button>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 60px;text-align: center">
+          <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleRegister">
+            注册
+          </el-button>
           <el-button style="width: 45%" type="primary" @click.native.prevent="handleTry">
-            获取体验账号
+            关注公众号
           </el-button>
         </el-form-item>
       </el-form>
@@ -54,9 +59,9 @@
       :center="true"
       width="30%">
       <div style="text-align: center">
-        <span class="font-title-large"><span class="color-main font-extra-large">关注公众号</span>回复<span class="color-main font-extra-large">体验</span>获取体验账号</span>
+        <span class="font-title-large"><span class="color-main font-extra-large">关注公众号(十四的随笔)</span>回复
+          <span class="color-main font-extra-large">支持</span>支持作者和获得支持</span>
         <br>
-        <img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/banner/qrcode_for_macrozheng_258.jpg" width="160" height="160" style="margin-top: 10px">
       </div>
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogConfirm">确定</el-button>
@@ -68,6 +73,7 @@
 <script>
   import {isvalidUsername} from '@/utils/validate';
   import {setSupport,getSupport,setCookie,getCookie} from '@/utils/support';
+  import {createUser} from "@/api/talk";
 
 
   export default {
@@ -148,6 +154,42 @@
             console.log('参数验证不合法！');
             return false
           }
+        })
+      },
+      handleRegister(){
+        this.$refs.loginForm.validate(valid => {
+          if (valid) {
+            this.loading = true;
+            createUser({name:this.loginForm.username,password:this.loginForm.password}).then((response) => {
+              console.log((response.data===1))
+              if(response.data===1){
+                this.$message({
+                  message: '注册成功,请登录！',
+                  type: 'success'
+                });
+                this.loading = false;
+                return true
+              }else{
+                this.loading = false;
+                this.$message({
+                  message: '注册失败,已存在用户！',
+                  type: 'error'
+                });
+              }
+            }).catch(() => {
+              this.loading = false;
+              this.$message({
+                message: '注册失败,已存在用户！',
+                type: 'error'
+              });
+            })
+
+          } else {
+            console.log('参数验证不合法！');
+            return false
+          }
+          return false;
+
         })
       },
       handleTry(){
