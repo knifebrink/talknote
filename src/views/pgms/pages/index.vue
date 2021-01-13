@@ -186,7 +186,6 @@
         });
       },
       handleDelete(index, row) {
-        // todo
         // this.notDevelopMessageTips();
         this.$confirm('是否要删除该页面?', '提示', {
           confirmButtonText: '确定',
