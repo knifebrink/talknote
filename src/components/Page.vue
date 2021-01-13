@@ -1,6 +1,6 @@
 <template>
   <div id="page">
-    <p>{{ info }}</p>
+    <p class="page_show">{{ info }}</p>
     <el-button id="btn" v-on:click="greet" type="success" round>再来一句</el-button>
   </div>
 </template>
@@ -87,7 +87,7 @@ export default {
 <style>
 html, body { padding: 0px; margin: 0px; width: 100%; height: 100%; }
 #app { width: 100%; height: 100%;}
-#page { margin: 0 auto; padding-top:45%;text-align:center;width: 100%; height: 55%; border-style: solid;}
-p{margin: 0 auto;text-align:left;font-size:300%;font-family:KaiTi;max-width:80%;color:#909399;min-height:50%;}
+#page { margin: 0 auto; padding-top:45%;text-align:center;width: 100%; height: 55%; box-sizing: content-box}
+p.page_show{margin: 0 auto;text-align:left;font-size:300%;font-family:KaiTi;max-width:80%;color:#909399;min-height:50%;}
 #btn {margin:40% auto;padding: 10px;font-size:400%;}
 </style>

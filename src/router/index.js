@@ -1,5 +1,5 @@
-﻿import Vue from 'vue'
-import Router from 'vue-router'
+﻿// import Vue from 'vue'
+// import Router from 'vue-router'
 import Home from '@/components/Home'
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -14,7 +14,7 @@ import Home from '@/components/Home'
   }
  **/
 import Layout from '../views/layout/Layout'
-Vue.use(Router)
+Vue.use(VueRouter)
 export const constantRouterMap = [
   {path: '/404', component: () => import('@/views/404')},
   {path: '/login', component: () => import('@/views/login/index')},
@@ -67,7 +67,7 @@ export const constantRouterMap = [
   },
   {path: '*', redirect: '/404', hidden: true}
 ]
-export default new Router({
+export default new VueRouter({
   mode: 'history',
   routes: constantRouterMap
 })

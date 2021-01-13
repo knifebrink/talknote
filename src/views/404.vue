@@ -2,7 +2,9 @@
   <div>
     <div class="app-container">
       <el-col :span="12">
-        <img :src="img_404" alt="404" class="img-style">
+<!--        <img :src="img_404" alt="404" class="img-style">-->
+        <p>404.jpg</p>
+        <p>实在贫穷，加载不出图片</p>
       </el-col>
       <el-col :span="12">
         <div style="margin-left: 100px;margin-top: 60px">
@@ -17,13 +19,13 @@
 </template>
 
 <script>
-  import img_404 from '@/assets/images/gif_404.gif';
+  // import img_404 from '@/assets/images/gif_404.gif';
 
   export default {
     name: 'wrongPage',
     data() {
       return {
-        img_404
+        // img_404
       }
     },
     methods: {
