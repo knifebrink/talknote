@@ -29,6 +29,7 @@ export default {
   // }
   created() {
     let title = "一句话";
+    document.title=title;
     this.pageName = this.$route.params.pageName;
     // 没有该页面则跳转404
     hasPageByName({pageName:this.pageName}).then(
@@ -36,14 +37,18 @@ export default {
         if(response.data==="noPage"){// 不存在页面
           this.$router.push({path: '/404'})
         }else{
-          if(title)
+          if(response.data)
+          {
             title = response.data;
+            document.title=title;
+          }
         }
       }
     ).catch(function (error) { // 请求失败处理
         console.log(error);
       });
-    document.title=title;
+
+
 
     this.greet();
   },
