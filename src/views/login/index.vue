@@ -67,7 +67,12 @@
     <el-button type="primary" @click="dialogConfirm">确定</el-button>
       </span>
     </el-dialog>
+
+    <div style="position:fixed;text-align:center;bottom:0;margin:0 auto;width:100%;color: #5c6b77">
+      <a target="_blank" style="color: #5c6b77" href="https://beian.miit.gov.cn">粤ICP备19023913号</a>
+    </div>
   </div>
+
 </template>
 
 <script>

@@ -76,7 +76,7 @@
       <el-form :model="page"
                ref="adminForm"
                label-width="150px" size="small">
-        <el-form-item label="页面名称：">
+        <el-form-item label="页面名称：" required=true>
           <el-input v-model="page.name" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="密码：">

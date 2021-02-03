@@ -90,7 +90,7 @@
       <el-form :model="talk"
                ref="adminForm"
                label-width="150px" size="small">
-        <el-form-item label="话语内容：">
+        <el-form-item label="话语内容：" required=true>
           <el-input v-model="talk.content" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="话语类型：">
